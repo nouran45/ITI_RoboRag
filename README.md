@@ -1,223 +1,158 @@
-🤖 RoboRAG — Robotics Course Document Assistant
+# 🤖 RoboRAG — Robotics Course Document Assistant
 
-A full-stack Retrieval-Augmented Generation (RAG) application that helps students study robotics course material by asking natural-language questions and receiving grounded answers with document and page citations.
+A full-stack **Retrieval-Augmented Generation (RAG)** application for studying robotics course material.
 
-RoboRAG retrieves semantically relevant lecture chunks from a persisted ChromaDB vector store, generates answers locally with Llama 3.2 through Ollama, exposes the pipeline through a FastAPI backend, and serves it through a dark, robotics-themed Streamlit chat interface.
+RoboRAG allows students to ask natural-language questions and receive answers grounded in the indexed robotics lectures, together with the **source PDF and page number** used to generate the answer.
 
-The project is designed as a Core Track text-based RAG assistant for robotics lecture PDFs.
+The system uses **SentenceTransformers + ChromaDB** for semantic retrieval, **Llama 3.2 through Ollama** for local answer generation, **FastAPI** for the backend, and **Streamlit** for the user interface.
 
-Table of Contents
+---
 
-Features
+## ✨ Features
 
-Architecture
+- Semantic search across robotics lecture PDFs
+- Local RAG generation using **Llama 3.2 + Ollama**
+- Embeddings with `sentence-transformers/all-MiniLM-L6-v2`
+- Persistent **ChromaDB** vector store
+- Exact **PDF filename + page number** citations
+- Top-K semantic retrieval
+- Query normalization for short robotics questions
+- Out-of-domain question refusal
+- FastAPI REST API
+- Streamlit chat interface
+- Loading and API error states
+- Environment-based configuration
+- Automated backend tests
+- Manual RAG evaluation on supported and unsupported questions
 
-Tech Stack
+---
 
-Project Structure
+## 🏗️ Architecture
 
-Knowledge Base
+```mermaid
+flowchart TD
+    A[User Question] --> B[Streamlit Frontend]
+    B -->|POST /query| C[FastAPI Backend]
+    C --> D[Query Normalization]
+    D --> E[MiniLM Query Embedding]
+    E --> F[ChromaDB Semantic Search]
+    F --> G[Top-4 Relevant Chunks]
+    G --> H[Grounded Context]
+    H --> I[Ollama + Llama 3.2]
+    I --> J[Answer + PDF/Page Sources]
+    J --> B
+```
 
-RAG Configuration
+### RAG Flow
 
-Vector Store Schema
-
-Getting Started
-
-Backend Setup
-
-Frontend Setup
-
-API Reference
-
-How Retrieval Works
-
-RAG Evaluation
-
-Testing
-
-Docker
-
-Environment Variables
-
-Screenshots
-
-Known Limitations
-
-Future Improvements
-
-Contributors
-
-License
-
-Features
-
-Semantic search across robotics lecture PDFs
-
-Retrieval-Augmented Generation using a local LLM
-
-Fully local inference through Ollama
-
-Sentence-transformer embeddings using sentence-transformers/all-MiniLM-L6-v2
-
-Persistent ChromaDB vector store
-
-No vector-store rebuilding during normal API requests
-
-Source-aware answers with exact PDF filenames and page numbers
-
-FastAPI REST backend with typed Pydantic request/response schemas
-
-Streamlit chat interface with a professional dark robotics theme
-
-Source expanders showing the documents used for each answer
-
-Query normalization for short or vague robotics questions
-
-Retrieval-distance filtering for clearly out-of-domain questions
-
-Prompt grounding with refusal behavior for unsupported questions
-
-Embedding model and vector store loaded once at FastAPI startup
-
-Frontend/backend communication configured through environment variables
-
-Automated backend tests for health, happy-path query, and invalid input
-
-Pinned backend and frontend requirements
-
-Dockerfile for the backend service
-
-Architecture
-
-                         ┌──────────────────────┐
-                         │         User         │
-                         └──────────┬───────────┘
-                                    │
-                                    ▼
-                         ┌──────────────────────┐
-                         │  Streamlit Frontend  │
-                         │ Chat + Sources + UX  │
-                         └──────────┬───────────┘
-                                    │
-                              POST /query
-                                    │
-                                    ▼
-                         ┌──────────────────────┐
-                         │   FastAPI Backend    │
-                         └──────────┬───────────┘
-                                    │
-                           normalize question
-                                    │
-                                    ▼
-                         ┌──────────────────────┐
-                         │ SentenceTransformer  │
-                         │ all-MiniLM-L6-v2     │
-                         └──────────┬───────────┘
-                                    │ query embedding
-                                    ▼
-                         ┌──────────────────────┐
-                         │      ChromaDB        │
-                         │ Top-K cosine search  │
-                         └──────────┬───────────┘
-                                    │ retrieved chunks
-                                    ▼
-                         ┌──────────────────────┐
-                         │  Grounded Context    │
-                         │ text + source + page │
-                         └──────────┬───────────┘
-                                    │
-                                    ▼
-                         ┌──────────────────────┐
-                         │ Ollama + Llama 3.2   │
-                         └──────────┬───────────┘
-                                    │
-                                    ▼
-                         ┌──────────────────────┐
-                         │  Answer + Sources    │
-                         └──────────┬───────────┘
-                                    │
-                                    ▼
-                           Streamlit Chat UI
-
-End-to-end RAG flow
-
+```text
 Question
-→ Query Normalization
-→ Query Embedding
-→ ChromaDB Retrieval
-→ Top-4 Context Chunks
-→ Grounded Ollama Generation
-→ Answer + PDF/Page Sources
+   ↓
+Query Normalization
+   ↓
+Query Embedding
+   ↓
+ChromaDB Retrieval
+   ↓
+Top-4 Relevant Chunks
+   ↓
+Grounded Prompt
+   ↓
+Llama 3.2 via Ollama
+   ↓
+Answer + Sources
+```
 
-Tech Stack
+---
 
-Component
+## 🧰 Tech Stack
 
-Technology
+| Component | Technology |
+|---|---|
+| Language | Python 3.11 |
+| LLM | Llama 3.2 |
+| Local LLM Runtime | Ollama |
+| Embeddings | SentenceTransformers |
+| Embedding Model | `all-MiniLM-L6-v2` |
+| Vector Database | ChromaDB |
+| Backend | FastAPI |
+| Validation | Pydantic |
+| Frontend | Streamlit |
+| HTTP Client | HTTPX |
+| Testing | Pytest / FastAPI TestClient |
+| Containerization | Docker |
 
-Language
+---
 
-Python 3.11
+## 📚 Knowledge Base
 
-LLM
+RoboRAG is built using **11 CSE 432 Robotics lecture PDFs**.
 
-Llama 3.2
+### Dataset Summary
 
-Local LLM Runtime
+| Item | Value |
+|---|---:|
+| Documents | 11 PDFs |
+| Total Pages | 418 |
+| Extractable Pages | 418 |
+| OCR Required | No |
+| Final Chunks | 422 |
+| Embedding Dimension | 384 |
 
-Ollama
+### Topics Covered
 
-Embeddings
+- Introduction to Robotics
+- Rigid Motion
+- 3D Rotation
+- Forward Kinematics
+- Velocity Kinematics
+- Jacobians
+- Robot Singularities
+- Mobile Robots
 
-SentenceTransformers
+The source documents are parsed, lightly cleaned, split into overlapping chunks, embedded, and stored in ChromaDB.
 
-Embedding Model
+The original lecture PDFs are not required during normal backend requests because the backend loads the already-persisted vector store.
 
-sentence-transformers/all-MiniLM-L6-v2
+---
 
-Embedding Dimension
+## ⚙️ RAG Configuration
 
-384
+```json
+{
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "collection_name": "roborag_chunks",
+  "chunk_size": 800,
+  "chunk_overlap": 150,
+  "embedding_dimension": 384,
+  "number_of_documents": 11,
+  "number_of_chunks": 422,
+  "top_k": 4,
+  "ollama_model": "llama3.2:latest",
+  "max_retrieval_distance": 0.65
+}
+```
 
-Vector Database
+The persisted configuration is stored in:
 
-ChromaDB
+```text
+backend/data/rag_config.json
+```
 
-Retrieval Metric
+### Chunking Strategy
 
-Cosine distance
+The documents are split using page-aware fixed-size chunking:
 
-Backend
+- **Chunk size:** 800 characters
+- **Overlap:** 150 characters
 
-FastAPI
+The overlap helps preserve context across chunk boundaries, while source and page metadata are stored with every chunk for citation.
 
-Validation
+---
 
-Pydantic / Pydantic Settings
+## 📁 Project Structure
 
-Frontend
-
-Streamlit
-
-HTTP Client
-
-HTTPX
-
-Configuration
-
-python-dotenv / .env
-
-Testing
-
-Pytest + FastAPI TestClient
-
-Containerization
-
-Docker
-
-Project Structure
-
+```text
 ITI_RoboRag/
 │
 ├── backend/
@@ -230,18 +165,15 @@ ITI_RoboRag/
 │   │   ├── schemas/
 │   │   │   └── query.py
 │   │   ├── services/
-│   │   │   ├── generation.py
-│   │   │   └── retrieval.py
+│   │   │   ├── retrieval.py
+│   │   │   └── generation.py
 │   │   ├── utils/
-│   │   │   └── logging_config.py
 │   │   └── main.py
 │   │
 │   ├── data/
+│   │   ├── vector_store/
 │   │   ├── rag_config.json
-│   │   ├── final_evaluation.csv
-│   │   └── vector_store/
-│   │       ├── chroma.sqlite3
-│   │       └── ...
+│   │   └── final_evaluation.csv
 │   │
 │   ├── tests/
 │   │   └── test_query.py
@@ -256,182 +188,112 @@ ITI_RoboRag/
 │   ├── .env.example
 │   ├── requirements.txt
 │   └── .streamlit/
-│       └── config.toml
 │
 ├── notebooks/
 │   └── rag_pipeline.ipynb
 │
 ├── screenshots/
-│   ├── 01_roborag_home.png
-│   ├── 02_grounded_answer.png
-│   ├── 03_out_of_domain_refusal.png
-│   ├── 04_fastapi_docs.png
-│   └── 05_*.png
 │
-├── data/
-│   └── raw/                        # source PDFs; may be excluded from Git
-│
-├── .dockerignore
 ├── .gitignore
+├── .dockerignore
 └── README.md
+```
 
+---
 
+# 🚀 Getting Started
 
-Knowledge Base
-
-RoboRAG is built around 11 robotics lecture PDFs from the CSE 432 Robotics course.
-
-
-
-The indexed lecture topics include:
-
-Introduction to Robotics
-
-Rigid Motion
-
-3D Rotation
-
-Forward Kinematics
-
-Velocity Kinematics
-
-Jacobians
-
-Robot Singularities
-
-Mobile Robots
-
-The source PDFs are parsed with pypdf, lightly cleaned, split into overlapping chunks, embedded, and stored in ChromaDB.
-
-RAG Configuration
-
-{
-  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
-  "collection_name": "roborag_chunks",
-  "chunk_size": 800,
-  "chunk_overlap": 150,
-  "embedding_dimension": 384,
-  "number_of_documents": 11,
-  "number_of_chunks": 422,
-  "top_k": 4,
-  "ollama_model": "llama3.2:latest",
-  "max_retrieval_distance": 0.65
-}
-
-Stored at:
-
-backend/data/rag_config.json
-
-Chunking strategy
-
-RoboRAG uses page-aware fixed-size chunking:
-
-Chunk size: 800 characters
-
-Overlap: 150 characters
-
-The overlap preserves context across chunk boundaries, while source/page metadata supports exact citations.
-
-Vector Store Schema
-
-RoboRAG uses ChromaDB as the persisted vector database.
-
-Field
-
-Description
-
-id
-
-Unique chunk identifier such as source_pX_cY
-
-document
-
-Chunk text
-
-embedding
-
-384-dimensional MiniLM embedding
-
-metadata.source
-
-Source PDF filename
-
-metadata.page
-
-Original PDF page number
-
-metadata.chunk_index
-
-Chunk index
-
-Collection name:
-
-roborag_chunks
-
-The backend loads the persisted vector store at startup; it does not rebuild the knowledge base for each request.
-
-Getting Started
-
-1. Prerequisites
+## Prerequisites
 
 Install:
 
-Python 3.10+
+- Python 3.10+
+- Git
+- Ollama
 
-Git
+Verify the installations:
 
-Ollama
-
-Verify:
-
+```bash
 python --version
 git --version
 ollama --version
+```
 
-2. Clone the repository
+---
 
+## 1. Clone the Repository
+
+```bash
 git clone https://github.com/nouran45/ITI_RoboRag.git
 cd ITI_RoboRag
+```
 
-3. Create a virtual environment
+---
 
-Windows
+## 2. Create a Virtual Environment
 
+### Windows
+
+```powershell
 python -m venv .venv
 .venv\Scripts\activate
+```
 
-macOS / Linux
+### macOS / Linux
 
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
+```
 
-4. Set up Ollama
+---
 
-ollama pull llama3.2
-
-If Ollama is not already running:
-
-ollama serve
-
-Backend Setup
+## 3. Install Dependencies
 
 From the repository root:
 
-cd backend
-pip install -r requirements.txt
+```bash
+pip install -r backend/requirements.txt
+pip install -r frontend/requirements.txt
+```
 
-Create a local .env.
+---
 
-Windows
+## 4. Set Up Ollama
 
-Copy-Item .env.example .env
+Pull the model used by RoboRAG:
 
-macOS / Linux
+```bash
+ollama pull llama3.2:latest
+```
 
-cp .env.example .env
+If Ollama is not already running:
 
-Example:
+```bash
+ollama serve
+```
 
+---
+
+# 🔌 Backend Setup
+
+Create the backend environment file.
+
+### Windows
+
+```powershell
+Copy-Item backend\.env.example backend\.env
+```
+
+### macOS / Linux
+
+```bash
+cp backend/.env.example backend/.env
+```
+
+Example backend configuration:
+
+```env
 APP_NAME=RoboRAG API
 APP_VERSION=1.0.0
 
@@ -440,74 +302,106 @@ OLLAMA_MODEL=llama3.2:latest
 MAX_RETRIEVAL_DISTANCE=0.65
 
 CORS_ORIGINS=http://localhost:8501
+```
 
 Start the backend from the repository root:
 
+```bash
 python -m uvicorn backend.app.main:app --port 8000
+```
 
-API:
+Backend URL:
 
+```text
 http://127.0.0.1:8000
+```
 
-Swagger:
+Interactive FastAPI documentation:
 
+```text
 http://127.0.0.1:8000/docs
+```
 
-Frontend Setup
+---
 
-Open a second terminal:
+# 💬 Frontend Setup
 
-cd frontend
-pip install -r requirements.txt
+Open a second terminal.
 
-Create frontend/.env.
+Create the frontend environment file.
 
-Windows
+### Windows
 
-Copy-Item .env.example .env
+```powershell
+Copy-Item frontend\.env.example frontend\.env
+```
 
-macOS / Linux
+### macOS / Linux
 
-cp .env.example .env
+```bash
+cp frontend/.env.example frontend/.env
+```
 
 Example:
 
+```env
 BACKEND_URL=http://127.0.0.1:8000
+```
 
-Run:
+Start the Streamlit application:
 
+```bash
+cd frontend
 streamlit run app.py
+```
 
 Open:
 
+```text
 http://localhost:8501
+```
 
-API Reference
+You can now ask robotics questions and view the generated answer together with its PDF and page citations.
 
-Health Check
+---
 
+## 🔗 API Reference
+
+### Health Check
+
+```http
 GET /health
+```
 
-Example:
+Example response:
 
+```json
 {
   "status": "ok",
   "app": "RoboRAG API",
   "version": "1.0.0"
 }
+```
 
-Ask a Question
+---
 
+### Ask a Question
+
+```http
 POST /query
+```
 
 Request:
 
+```json
 {
   "question": "What is the Jacobian in robotics?"
 }
+```
 
 Example response:
 
+```json
 {
   "answer": "The Jacobian in robotics is a matrix that ...",
   "sources": [
@@ -518,419 +412,188 @@ Example response:
     }
   ]
 }
+```
 
-Empty input returns HTTP 422.
+An empty question is rejected with HTTP `422`.
 
-cURL example
+### cURL Example
 
-curl -X POST "http://127.0.0.1:8000/query"   -H "Content-Type: application/json"   -d "{\"question\":\"What is the Jacobian in robotics?\"}"
+```bash
+curl -X POST "http://127.0.0.1:8000/query" \
+  -H "Content-Type: application/json" \
+  -d "{\"question\":\"What is the Jacobian in robotics?\"}"
+```
 
-How Retrieval Works
+---
 
-The question is lightly normalized for robotics-domain semantic retrieval.
+## 🔍 How Retrieval Works
 
-all-MiniLM-L6-v2 creates a 384-dimensional query embedding.
+1. The user's question is normalized for robotics-domain retrieval.
+2. `all-MiniLM-L6-v2` converts the question into a 384-dimensional embedding.
+3. ChromaDB performs cosine-distance semantic search.
+4. The **Top-4** most relevant chunks are retrieved.
+5. A retrieval-distance threshold helps detect unrelated questions.
+6. Retrieved text is combined with its PDF and page metadata.
+7. The grounded context is passed to Llama 3.2 through Ollama.
+8. FastAPI returns the generated answer together with the retrieved sources.
+9. Streamlit displays the answer and citations.
 
-ChromaDB performs cosine-distance semantic search.
+---
 
-The backend retrieves the Top-4 most relevant chunks.
+# 📊 RAG Evaluation
 
-A retrieval-distance threshold helps reject clearly unrelated questions.
+The final RoboRAG system was manually evaluated using **12 questions**:
 
-Retrieved text is combined with source/page metadata.
+- 10 supported robotics questions
+- 2 deliberately unsupported questions
 
-The grounded context is sent to Llama 3.2 through Ollama.
+### Final Results
 
-FastAPI returns the answer plus PDF/page citations.
+| Metric | Result |
+|---|---:|
+| Supported Retrieval Success | **100.0%** |
+| Supported Answer Accuracy | **100.0%** |
+| Overall Answer Accuracy | **100.0%** |
+| Fully Grounded Answer Rate | **91.7%** |
+| Unsupported Question Refusal Rate | **100.0%** |
 
-Streamlit displays the result.
+These percentages describe the manually reviewed 12-question evaluation set and are not intended as a universal benchmark.
 
-RAG Evaluation
+The full evaluation results are available in:
 
-The final system was manually evaluated using 12 questions:
-
-10 supported robotics questions
-
-2 deliberately unsupported questions
-
-Final metrics
-
-Metric
-
-Result
-
-Supported retrieval success
-
-100.0%
-
-Supported answer accuracy
-
-100.0%
-
-Overall answer accuracy
-
-100.0%
-
-Fully grounded answer rate
-
-91.7%
-
-Unsupported-question refusal rate
-
-100.0%
-
-These percentages describe this manually reviewed 12-question evaluation set; they are not a universal benchmark.
-
-Evaluation questions
-
-#
-
-Question
-
-Retrieval
-
-Answer
-
-Grounding
-
-1
-
-What is the Jacobian in robotics?
-
-✅
-
-✅
-
-✅
-
-2
-
-What is a robot singularity?
-
-✅
-
-✅
-
-✅
-
-3
-
-What is forward kinematics?
-
-✅
-
-✅
-
-Mostly
-
-4
-
-What is a rotation matrix?
-
-✅
-
-✅
-
-✅
-
-5
-
-How are rotations represented in three dimensions?
-
-✅
-
-✅
-
-✅
-
-6
-
-What is velocity kinematics?
-
-✅
-
-✅
-
-✅
-
-7
-
-What is the relationship between joint velocities and robot motion?
-
-✅
-
-✅
-
-✅
-
-8
-
-What are the different types of mobile robot locomotion?
-
-✅
-
-✅
-
-✅
-
-9
-
-Why is the Jacobian important in robot motion?
-
-✅
-
-✅
-
-✅
-
-10
-
-What problems can occur near a robot singularity?
-
-✅
-
-✅
-
-✅
-
-11
-
-What was Microsoft's revenue in 2025?
-
-N/A
-
-✅ Refused
-
-✅
-
-12
-
-What is the capital city of Australia?
-
-N/A
-
-✅ Refused
-
-✅
-
-Full evaluation artifact:
-
+```text
 backend/data/final_evaluation.csv
+```
 
-Failure analysis
+The complete RAG construction and evaluation process is available in:
 
-Retrieval returned relevant robotics material for all supported evaluation questions.
+```text
+notebooks/rag_pipeline.ipynb
+```
 
-The main limitation appeared in generation grounding: one forward-kinematics response was rated mostly grounded because it included some explanatory terminology beyond the exact retrieved wording, while the core answer remained correct.
+### Failure Analysis
+
+The retrieval stage successfully returned relevant robotics material for all supported evaluation questions.
+
+One forward-kinematics answer was classified as **mostly grounded** because the generated explanation included minor additional terminology beyond the exact retrieved wording, although the core technical answer remained correct.
 
 Mitigations used during development included:
 
-Top-K tuning
+- increasing the final retrieval setting to Top-K = 4
+- query normalization
+- retrieval-distance filtering
+- generation temperature set to `0`
+- explicit grounding instructions
+- testing both supported and unsupported questions
 
-query normalization
+---
 
-a retrieval-distance threshold
+# 🧪 Testing
 
-temperature 0
+Backend tests are located in:
 
-grounded prompt instructions
-
-evaluation with supported and unsupported questions
-
-Testing
-
-Backend tests:
-
+```text
 backend/tests/test_query.py
-
-They cover:
-
-GET /health
-
-successful POST /query
-
-empty-question validation returning HTTP 422
+```
 
 Run:
 
+```bash
 python -m pytest backend/tests -v
+```
 
-Expected:
+Expected result:
 
+```text
 3 passed
+```
 
-Docker
+The tests cover:
 
-Backend Dockerfile:
+- `GET /health`
+- successful `POST /query`
+- empty-question validation returning HTTP `422`
 
-backend/Dockerfile
+---
 
-Build from repository root:
+# 🐳 Docker
 
+A Dockerfile is included for the FastAPI backend.
+
+Build the image from the repository root:
+
+```bash
 docker build -f backend/Dockerfile -t roborag-backend .
+```
 
-Example:
+Run:
 
+```bash
 docker run -p 8000:8000 roborag-backend
+```
 
-Ollama is a separate runtime. The container must be able to reach the Ollama service on the host or another container.
+> Ollama runs separately from the FastAPI container and must be reachable by the backend at runtime.
 
-Environment Variables
+---
 
-Backend
+# 🌐 Environment Variables
 
-Variable
+## Backend
 
-Example
+| Variable | Example | Purpose |
+|---|---|---|
+| `APP_NAME` | `RoboRAG API` | API application name |
+| `APP_VERSION` | `1.0.0` | Application version |
+| `TOP_K` | `4` | Number of retrieved chunks |
+| `OLLAMA_MODEL` | `llama3.2:latest` | Local generation model |
+| `MAX_RETRIEVAL_DISTANCE` | `0.65` | Out-of-domain retrieval cutoff |
+| `CORS_ORIGINS` | `http://localhost:8501` | Allowed frontend origin |
 
-Description
+## Frontend
 
-APP_NAME
+| Variable | Example | Purpose |
+|---|---|---|
+| `BACKEND_URL` | `http://127.0.0.1:8000` | FastAPI backend URL |
 
-RoboRAG API
+Real `.env` files are ignored by Git. Only `.env.example` templates are included in the repository.
 
-API application name
+---
 
-APP_VERSION
+# 🖼️ Screenshots
 
-1.0.0
+## RoboRAG Home
 
-Application version
+![RoboRAG Home](screenshots/01_roborag_home.png)
 
-TOP_K
+## Grounded Answer with Sources
 
-4
+![Grounded Answer](screenshots/02_grounded_answer.png)
 
-Number of retrieved chunks
+## Out-of-Domain Refusal
 
-OLLAMA_MODEL
+![Out-of-Domain Refusal](screenshots/03_out_of_domain_refusal.png)
 
-llama3.2:latest
+## FastAPI Swagger Documentation
 
-Ollama generation model
+![FastAPI Docs](screenshots/04_fastapi_docs.png)
 
-MAX_RETRIEVAL_DISTANCE
+---
 
-0.65
+# 🔮 Future Improvements
 
-Retrieval-distance cutoff
+- Hybrid keyword + vector retrieval
+- Retrieval reranking
+- Conversation-aware follow-up questions
+- Direct document upload and automatic re-indexing
+- Automated RAG evaluation metrics
+- Larger robotics knowledge base
+- Multimodal support for robotics diagrams and images
+- Docker Compose deployment
 
-CORS_ORIGINS
+---
 
-http://localhost:8501
-
-Allowed frontend origin
-
-Frontend
-
-Variable
-
-Example
-
-Description
-
-BACKEND_URL
-
-http://127.0.0.1:8000
-
-FastAPI base URL
-
-Never commit real .env files.
-
-Screenshots
-
-RoboRAG Home
-
-
-
-Grounded Robotics Answer
-
-
-
-Out-of-Domain Refusal
-
-
-
-FastAPI Swagger Documentation
-
-
-
-Additional Application View
-
-
-
-Update the fifth filename if needed.
-
-Known Limitations
-
-Answer quality depends on the indexed lecture content.
-
-A local LLM may occasionally introduce minor explanatory wording beyond the retrieved text.
-
-Semantic retrieval can miss information when source extraction is poor or phrasing differs greatly from lecture terminology.
-
-The assistant currently indexes a fixed robotics corpus.
-
-Conversation-aware follow-up retrieval is not yet implemented.
-
-Ollama must be available locally.
-
-Future Improvements
-
-Retrieval reranking
-
-Hybrid keyword + semantic retrieval
-
-Evidence extraction before generation
-
-Conversation-aware follow-up questions
-
-Direct PDF uploads and automatic indexing
-
-Expanded robotics knowledge base
-
-Automated RAG evaluation metrics
-
-Richer citation previews
-
-Docker Compose for frontend + backend + Ollama
-
-Optional multimodal robotics diagram support
-
-Contributors
-
-Nouran Yasser Salama
-
-[Second team member name]
-
-Replace the placeholder before submission.
-
-License
+# 📄 License
 
 This project is intended for educational use.
 
-If institutional lecture material is used as the knowledge base, ensure it is used and distributed according to the applicable institutional policies.
-
-Summary
-
-Robotics PDFs
-      ↓
-Parsing + Cleaning
-      ↓
-800-character Chunks
-      ↓
-MiniLM Embeddings
-      ↓
-Persistent ChromaDB
-      ↓
-Top-4 Semantic Retrieval
-      ↓
-Grounded Llama 3.2 Generation
-      ↓
-FastAPI
-      ↓
-Streamlit
-      ↓
-Answer + PDF/Page Sources
-
-RoboRAG demonstrates a complete local RAG product: raw robotics documents are transformed into a searchable vector knowledge base, served through an API, and exposed through an interactive study assistant with traceable citations.
+Course documents should only be used or redistributed according to their applicable institutional permissions.
