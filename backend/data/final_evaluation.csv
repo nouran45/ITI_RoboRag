@@ -1,0 +1,65 @@
+question,answer,top_source,top_page,top_distance,number_of_sources,retrieval_relevant,answer_correct,grounded,notes
+What is the Jacobian in robotics?,"The Jacobian in robotics is a matrix that represents the vector version of the ordinary derivative of a scalar function.
+
+The Jacobian is a crucial quantity in the analysis and control of robot motion, as it determines the velocity relationships between the space of Cartesian positions and orientations and the space of joint positions. This matrix is derived from the forward kinematic equations, which define a function between the space of Cartesian positions and orientations and the space of joint positions.",07_velocity_kinematics.pdf,2,0.3195,4,Yes,Yes,Yes,Relevant Jacobian context was retrieved and the answer correctly explains its definition and role in robot motion.
+What is a robot singularity?,"A robot singularity refers to a workspace point that becomes unreachable under small variations in link parameters, such as length or offsets.
+
+In the context of robotics, a singularity can occur due to the limitations of the robot's kinematic structure, making it difficult or impossible to achieve a specific pose or configuration. This can lead to a situation where the inverse kinematics problem has no unique solution, resulting in either no solution or infinitely many solutions.",09_singularities.pdf,3,0.4223,4,Yes,Yes,Yes,Relevant singularity lecture content was retrieved and the answer correctly describes singularity behavior.
+What is forward kinematics?,"Forward kinematics is a function that defines the relationship between the space of Cartesian positions and orientations and the space of joint positions.
+
+This function is crucial in robotics as it allows us to determine the position and orientation of a robot's end effector based on the joint positions. In other words, forward kinematics enables us to calculate the robot's pose in the Cartesian space given the joint angles.",07_velocity_kinematics.pdf,2,0.3385,4,Yes,Yes,Mostly,"The core forward-kinematics definition is correct and retrieved successfully, but the generated explanation may include some additional pretrained terminology."
+What is a rotation matrix?,"A rotation matrix is a mathematical representation of a rotation in 3D space.
+
+It can be described as a product of successive rotations about the principal coordinate axes x0, y0, and z0 ""Fixed Frame"" taken in a specific order. These rotations define the roll, pitch, and yaw angles, which are denoted as θ, φ, and ψ respectively. The rotation order is z → y → x.
+
+The rotation matrix can also be represented as a product of individual rotation matrices about each axis, in a specific order.",02_rigid_motion_1.pdf,25,0.3306,4,Yes,Yes,Yes,Relevant rigid-motion material was retrieved and the answer correctly explains the rotation matrix.
+How are rotations represented in three dimensions?,"Rotations in three dimensions are represented by a rotation matrix, which is a 3x3 matrix. The rotation matrix is given by:
+
+𝑅1
+0 =
+𝑥1𝑥0 𝑦1𝑥0 𝑧1𝑥0
+𝑥1𝑦0 𝑦1𝑦0 𝑧1𝑦0
+𝑥1𝑧0 𝑦1𝑧0 𝑧1𝑧0
+
+This matrix represents a rotation about the principal axes of the frame 𝑜1𝑥1𝑦1, which are projected onto the coordinate frame 𝑜0𝑥0𝑦0.
+
+The rotation matrix has several important properties:
+
+* The transpose of the rotation matrix is equal to its inverse, i.e., 𝑅−1 = 𝑅𝑇.
+* The columns (and therefore the rows) of the rotation matrix are mutually orthogonal.
+* Each column (and therefore each row) of the rotation matrix is a unit vector.
+* The determinant of the rotation matrix is equal to 1, i.e., det 𝑅 = 1.
+
+These properties apply to rotation matrices in three or more dimensions.",02_rigid_motion_1.pdf,11,0.2265,4,Yes,Yes,Yes,The retrieved lecture directly discusses three-dimensional rotation representation and the answer is consistent with it.
+What is velocity kinematics?,"Velocity kinematics refers to the relationship between the velocity of a robot's end effector and the joint velocities of the robot.
+
+The velocity relationships are determined by the Jacobian of the forward kinematic equations, which define a function between the space of Cartesian positions and orientations and the space of joint positions. The Jacobian is a matrix that represents the vector version of the ordinary derivative of a scalar function, and it plays a crucial role in the analysis and control of robot motion.",07_velocity_kinematics.pdf,2,0.3775,4,Yes,Yes,Yes,Relevant velocity-kinematics content was retrieved and the answer correctly describes the relationship through the Jacobian.
+What is the relationship between joint velocities and robot motion?,"The relationship between joint velocities and robot motion is described by the Jacobian of the forward kinematic equations.
+
+The Jacobian is a matrix that represents the vector version of the ordinary derivative of a scalar function. In the context of robot motion, the Jacobian is used to determine the velocity relationships between the joint positions and the Cartesian positions and orientations.
+
+The Jacobian is crucial in the analysis and control of robot motion, as it provides a way to relate the joint velocities to the desired robot motion. By understanding the Jacobian, one can better control the robot's movement and avoid potential issues such as the robot crashing into objects or oscillating about its desired position.
+
+In essence, the Jacobian acts as a bridge between the joint positions and the desired robot motion, allowing for more precise control and manipulation of the robot's movement.",07_velocity_kinematics.pdf,2,0.3785,4,Yes,Yes,Yes,The retrieved context correctly relates joint velocities to robot motion through the Jacobian.
+What are the different types of mobile robot locomotion?,"According to the retrieved context, there are several types of mobile robot locomotion. These include:
+
+* Walking
+* Jumping
+* Running
+* Sliding
+* Skating
+* Swimming
+* Flying
+* Rolling
+
+These locomotion methods are inspired by their biological counterparts and have been demonstrated in research robots.",01_intro_to_robotics.pdf,5,0.3302,4,Yes,Yes,Yes,Relevant robotics/mobile-robot material was retrieved and the answer correctly identifies the locomotion methods.
+Why is the Jacobian important in robot motion?,"The Jacobian is important in robot motion because it determines the velocity relationships between the joint positions and the Cartesian positions and orientations.
+
+The Jacobian is a matrix that represents the vector version of the ordinary derivative of a scalar function. In the context of robot motion, the Jacobian is used to relate the changes in joint positions to the changes in Cartesian positions and orientations. This is crucial for understanding how the robot's motion is affected by the joint positions.
+
+The importance of the Jacobian lies in its ability to provide a mathematical representation of the robot's motion. By analyzing the Jacobian, we can gain insights into the robot's velocity relationships, which is essential for controlling and analyzing robot motion.",07_velocity_kinematics.pdf,2,0.2749,4,Yes,Yes,Yes,The retrieved velocity-kinematics lecture explicitly states the importance of the Jacobian in analysis and control of robot motion.
+What problems can occur near a robot singularity?,"A robot singularity can occur when the workspace point becomes unreachable under small variations in link parameters, such as length or offsets. This can lead to problems in the robot's performance and control.
+
+Near a singularity, the inverse kinematics may not have a unique solution, resulting in either no solution or infinitely many solutions. This is because at a singularity, bounded end-effector velocities may require unbounded joint velocities, and bounded end-effector forces/torques may require unbounded joint torques.",09_singularities.pdf,3,0.344,4,Yes,Yes,Yes,Relevant singularity material was retrieved and the answer correctly describes inverse-kinematics problems near singularities.
+What was Microsoft's revenue in 2025?,I could not find this information in the provided robotics course documents.,01_intro_to_robotics.pdf,4,0.5935,4,N/A,Yes,Yes,The question is outside the robotics knowledge base and RoboRAG correctly refused to answer.
+What is the capital city of Australia?,I could not find the information about the capital city of Australia in the provided robotics course documents.,01_intro_to_robotics.pdf,5,0.4318,4,N/A,Yes,Yes,The question is outside the robotics knowledge base and RoboRAG correctly refused to answer.

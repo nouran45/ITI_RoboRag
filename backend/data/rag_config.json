@@ -1,0 +1,12 @@
+{
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "collection_name": "roborag_chunks",
+    "chunk_size": 800,
+    "chunk_overlap": 150,
+    "embedding_dimension": 384,
+    "number_of_documents": 11,
+    "number_of_chunks": 422,
+    "top_k": 4,
+    "ollama_model": "llama3.2:latest",
+    "max_retrieval_distance": 0.65
+}
