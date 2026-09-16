@@ -275,41 +275,13 @@ ITI_RoboRag/
 ├── .gitignore
 └── README.md
 
-If your fifth screenshot uses a different filename, update it in the Screenshots section before submission.
+
 
 Knowledge Base
 
 RoboRAG is built around 11 robotics lecture PDFs from the CSE 432 Robotics course.
 
-Dataset statistics
 
-Item
-
-Value
-
-Source documents
-
-11 PDFs
-
-Total pages
-
-418
-
-Pages with extractable text
-
-418
-
-Pages requiring OCR
-
-0
-
-Failed files
-
-0
-
-Final chunks
-
-422
 
 The indexed lecture topics include:
 
